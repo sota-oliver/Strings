@@ -13,7 +13,7 @@ _____________________________________________________________________________
 
 ### Team
 * Iva Kavalko ikavalko@unipu.hr
-* Oliver Šota osota@unipu.hr
+* Oliver Šota osota@unipu.hr / sota.oliver@protonmail.com
 
 _____________________________________________________________________________
 

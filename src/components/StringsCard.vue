@@ -51,77 +51,81 @@ export default {
     methods :{
         // --------------------------------------------------------------------Add song function
         addSong(){
-            // --------------------------------------------------------------------Get this posts data
-            db.collection("musicFeed").doc(this.info.id).get().then(doc => {
-                if (doc.exists) {
-                    // --------------------------------------------------------------------Put data to local variables
-                    this.songUrl = doc.data().songUrl;
-                    this.newTitle = doc.data().title;
-                    this.newArtist = doc.data().artist;
-                    // --------------------------------------------------------------------Put data from local variables to database
-                    db.collection("users").doc(this.userEmail).collection("playlist")
-                        .add({
-                            id:'',
-                            songUrl: this.songUrl ,
-                            title: this.newTitle,
-                            artist: this.newArtist, 
-                            posted_at: new Date(), 
-                        })
-                        .then((docRef) => {
-                            console.log("Song URL: ", this.songUrl);
-                            console.log("Song added with ID: ", docRef.id);
-                        })
-                        .catch((error) => {
-                            console.error("Error adding song to playlist: ", error);
-                        });
-                } else {
-                    // doc.data() will be undefined in this case
-                    console.log("No such post!");
-                }
-            }).catch(error => {
-                console.log("Error getting post:", this.error);
-            });
-            
+            if(window.confirm("Are you sure you want to add this song to your playlist?")){
+                // --------------------------------------------------------------------Get this posts data
+                db.collection("musicFeed").doc(this.info.id).get().then(doc => {
+                    if (doc.exists) {
+                        // --------------------------------------------------------------------Put data to local variables
+                        this.songUrl = doc.data().songUrl;
+                        this.newTitle = doc.data().title;
+                        this.newArtist = doc.data().artist;
+                        // --------------------------------------------------------------------Put data from local variables to database
+                        db.collection("users").doc(this.userEmail).collection("playlist")
+                            .add({
+                                id:'',
+                                songUrl: this.songUrl ,
+                                title: this.newTitle,
+                                artist: this.newArtist, 
+                                posted_at: new Date(), 
+                            })
+                            .then((docRef) => {
+                                console.log("Song URL: ", this.songUrl);
+                                console.log("Song added with ID: ", docRef.id);
+                                window.location.reload(false);
+                            })
+                            .catch((error) => {
+                                console.error("Error adding song to playlist: ", error);
+                            });
+                    } else {
+                        // doc.data() will be undefined in this case
+                        console.log("No such post!");
+                    }
+                }).catch(error => {
+                    console.log("Error getting post:", this.error);
+                }); 
+            }  
         },
         // --------------------------------------------------------------------Add friend function
         addFriend(){
-            // --------------------------------------------------------------------Get this posts data
-            db.collection("musicFeed").doc(this.info.id).get().then(doc => {
-                if (doc.exists) {
-                    // --------------------------------------------------------------------Put data to local variables
-                    this.addFriendMail = doc.data().email;
-                    // --------------------------------------------------------------------Get data from user that posted this post
-                    db.collection("users").doc(this.addFriendMail).get().then((doc) =>{
-                        if (doc.exists) {
-                            // --------------------------------------------------------------------Put data to local variables
-                            this.addFriendName = doc.data().userName;
-                            // --------------------------------------------------------------------Add friend data to your collection
-                            db.collection("users").doc(this.userEmail).collection("friends").doc(this.addFriendMail)
-                                .set({
-                                    added_at: new Date(),
-                                    email: this.addFriendMail,
-                                    name: this.addFriendName
-                                })
-                                .then(()=> {
-                                    console.log("Friend added: ", this.addFriendMail);
-                                })
-                                .catch(error => {
-                                    console.error("Error adding friend: ", error);
-                                });
-                        } else {
-                            // doc.data() will be undefined in this case
-                            console.log("No such friend exists!");
-                        }
-                    }).catch((error)=>{
-                        console.log("Error getting friend:", error);
-                    });
-                } else {
-                    // doc.data() will be undefined in this case
-                    console.log("No such friend email!");
-                }
-            }).catch(error => {
-                console.log("Error getting friend document:", this.error);
-            });
+            if(window.confirm("Are you sure you want to add this person ass your friend?")){
+                // --------------------------------------------------------------------Get this posts data
+                db.collection("musicFeed").doc(this.info.id).get().then(doc => {
+                    if (doc.exists) {
+                        // --------------------------------------------------------------------Put data to local variables
+                        this.addFriendMail = doc.data().email;
+                        // --------------------------------------------------------------------Get data from user that posted this post
+                        db.collection("users").doc(this.addFriendMail).get().then((doc) =>{
+                            if (doc.exists) {
+                                // --------------------------------------------------------------------Put data to local variables
+                                this.addFriendName = doc.data().userName;
+                                // --------------------------------------------------------------------Add friend data to your collection
+                                db.collection("users").doc(this.userEmail).collection("friends").doc(this.addFriendMail)
+                                    .set({
+                                        added_at: new Date(),
+                                        email: this.addFriendMail,
+                                        name: this.addFriendName
+                                    })
+                                    .then(()=> {
+                                        console.log("Friend added: ", this.addFriendMail);
+                                    })
+                                    .catch(error => {
+                                        console.error("Error adding friend: ", error);
+                                    });
+                            } else {
+                                // doc.data() will be undefined in this case
+                                console.log("No such friend exists!");
+                            }
+                        }).catch((error)=>{
+                            console.log("Error getting friend:", error);
+                        });
+                    } else {
+                        // doc.data() will be undefined in this case
+                        console.log("No such friend email!");
+                    }
+                }).catch(error => {
+                    console.log("Error getting friend document:", this.error);
+                });
+            }
         },
         // --------------------------------------------------------------------Like function
         likeFeed(){
