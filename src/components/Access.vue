@@ -97,23 +97,32 @@ export default {
     },
     // ----------------------------------------------------------------Signup user
     signup () {
-      firebase.auth().createUserWithEmailAndPassword(this.email, this.password).catch(function(error) {
-        console.log(error)
-      });
-      // ----------------------------------------------------------------Create collection(users)->document(id(email)->data(input))
-      db.collection('users').doc(this.email).set({
-        userName: this.name,
-        userMail: this.email,
-        userPassword: this.password,
-        postedAt: new Date(),
-      })
-        .then(function(docRef) {
-            console.log("User added with ID: ", docRef.id);
-            
-        })
-        .catch(function(error) {
-            console.error("Error adding user: ", error);
-        });
+      if(this.password.toString().length > 5){
+        if(this.password == this.passwordConfirmation){
+          firebase.auth().createUserWithEmailAndPassword(this.email, this.password).catch(function(error) {
+            console.log(error)
+          });
+          // ----------------------------------------------------------------Create collection(users)->document(id(email)->data(input))
+          db.collection('users').doc(this.email).set({
+            userName: this.name,
+            userMail: this.email,
+            userPassword: this.password,
+            postedAt: new Date(),
+          })
+          .then(function(docRef) {
+              console.log("User added with ID: ", docRef.id);
+              
+          })
+          .catch(function(error) {
+              console.error("Error adding user: ", error);
+          });
+        }else{
+          window.alert("Passwords do not match!");
+        }
+      
+      }else{
+        window.alert("Password must be at least 6 characters!");
+      }
     },
     // ----------------------------------------------------------------Login user
     login () {
